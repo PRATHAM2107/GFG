@@ -99,27 +99,17 @@ struct Node
 class Solution{
   public:
     /*You are required to complete this method*/
-    bool check(Node *root)
+    set<int> s;
+    bool check(Node *root, int l=0)
     {
         //Your code here
-        bool flag = 0;
-        
-        queue<Node*>q;
-        q.push(root);
-        
-        while(!q.empty()){
-            int q_size = q.size();
-            while(q_size--){
-                Node* cur = q.front();
-                q.pop();
-                if(cur->left != NULL)q.push(cur->left);
-                if(cur->right != NULL)q.push(cur->right);
-                if(cur->left == NULL && cur->right == NULL)flag = 1;
-            }
-            if(flag && q.size()>0)return 0;
-        }
-        
-        return 1;
+        if(root == NULL) return true;
+        if(!root->left && !root->right) s.insert(l);
+       
+        check(root->left, l+1);
+        check(root->right, l+1 );
+       
+        return s.size() == 1;
     }
 };
 
