@@ -4,56 +4,44 @@ using namespace std;
 
 
 // } Driver Code Ends
-
-#define ll long long
-int mod=1e9+7;
 class Solution
 {
-    public:
-    vector<int> search(string p, string s)
-    {
-        vector<int> ans;
-        ll patHash=0;
-        ll pr=1;
-        for(int i=0;i<p.length();i++)
-        {
-            patHash=(patHash+((p[i]-'a'+1)*pr)%mod)%mod;
-            pr=(pr*31)%mod;
+   vector<int> z_function(const string& s) {
+    int n = s.size();
+    vector<int> z(n);
+    int l = 0, r = 0;
+    for (int i = 1; i < n; ++i) {
+        if (i < r) {
+            z[i] = min(r - i, z[i - l]);
         }
-        
-        ll txtHash=0;
-        pr=1;
-        for(int i=0;i<p.length();i++)
-        {
-            txtHash=(txtHash+((s[i]-'a'+1)*pr)%mod)%mod;
-            pr=(pr*31)%mod;
+        while (i + z[i] < n && s[z[i]] == s[i + z[i]]) {
+            ++z[i];
         }
-        
-        int i=0;
-        int j=p.length()-1;
-        ll pr1=1;
-        ll pr2=pr;
-        
-        if(patHash==txtHash)
-        ans.push_back(1);
-        
-        while(j+1<s.length())
-        {
-            j++;
-            txtHash=(txtHash+((s[j]-'a'+1)*pr2)%mod)%mod;
-            txtHash=(txtHash-((s[i]-'a'+1)*pr1)%mod + mod )%mod;
-            patHash=(patHash*31)%mod;
-            i++;
-            
-            if(patHash==txtHash)
-            ans.push_back(i+1);
-            
-            
-            pr1=(pr1*31)%mod;
-            pr2=(pr2*31)%mod;
+        if (i + z[i] > r) {
+            l = i;
+            r = i + z[i];
         }
-        return ans;
     }
+    return z;
+}
+
+    public:
+        vector <int> search(string pattern, string text)
+        {
+            //code here.
+             string combined = pattern + "#" + text;  // Add a distinct character between pattern and text
+            vector<int> z = z_function(combined);
+            vector<int> ans;
+        
+            for (int i = pattern.size() + 1; i < combined.size(); ++i) {
+                if (z[i] == pattern.size()) {
+                    ans.push_back(i - pattern.size() );  // Adjust index to get the start position of pattern in text
+                }
+            }
+            return ans;
+            
+        }
+     
 };
 
 //{ Driver Code Starts.
